@@ -8,6 +8,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import useMessages from '../hooks/messages';
 import { v4 as uuidv4 } from 'uuid';
+import { PaperAirplaneIcon } from '@heroicons/react/outline';
 
 export default function Home() {
     const [input, setInput] = useState('');
@@ -64,13 +65,25 @@ export default function Home() {
                         <Message message={m} key={m.id} />
                     ))}
                 </div>
-                <Input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
+                <div tw="flex gap-2">
+                    <Input
+                        type="text"
+                        placeholder="Type a message..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        tw="flex-1"
+                    />
+                    <button
+                        tw="flex-none bg-black/50 hover:bg-black text-white font-bold p-2 rounded"
+                        onClick={() => {
+                            postMessage(input);
+                            setInput('');
+                        }}
+                    >
+                        <PaperAirplaneIcon tw="rotate-90 h-6 w-6" />
+                    </button>
+                </div>
             </div>
         </Layout>
     );
