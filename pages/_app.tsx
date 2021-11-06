@@ -1,16 +1,17 @@
 import 'tailwindcss/tailwind.css';
 import Head from 'next/head';
 import React from 'react';
-import { GlobalStyles } from 'twin.macro';
+import { ChatProvider } from '../components/ChatContext';
+import { AppProps } from 'next/dist/shared/lib/router/router';
 
-function ChatApp({ Component, pageProps }) {
+function ChatApp({ Component, pageProps }: AppProps) {
     return (
-        <div>
+        <ChatProvider>
             <Head>
                 <title>Subtle Chat App</title>
             </Head>
             <Component {...pageProps} />
-        </div>
+        </ChatProvider>
     );
 }
 
