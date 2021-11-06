@@ -34,7 +34,7 @@ export default function Home() {
                 },
             });
         }
-    }, [router.query.room, router.isReady]);
+    }, [router]);
     useHotkeys('ctrl+l, cmd+l', (e) => {
         e.preventDefault();
         setForceLoader((x) => !x);

@@ -59,7 +59,7 @@ export default function HelpDialog({
                                 </kbd>{' '}
                                 to show a discreet loading screen, and then the
                                 same combination again to get back to chatting
-                                once they're out of sight &#128521;
+                                once they&apos;re out of sight &#128521;
                             </li>
                             <li>
                                 <span tw="font-semibold">

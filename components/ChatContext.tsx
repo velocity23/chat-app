@@ -16,9 +16,16 @@ export const ChatContext = createContext<{
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
 
+    const storedName =
+        typeof localStorage === 'undefined'
+            ? null
+            : localStorage.getItem('username');
     const anonName = `anon-${Math.floor(new Date().getTime() / 1000)}`;
+    const [name, setName] = useState(storedName || anonName);
+
     const roomId = (router.query.room as string | undefined) || null;
     const isReady = router.isReady;
+
     if (typeof localStorage === 'undefined') {
         return (
             <ChatContext.Provider
@@ -33,9 +40,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             </ChatContext.Provider>
         );
     }
-
-    const storedName = localStorage.getItem('username');
-    const [name, setName] = useState(storedName || anonName);
 
     const updateName = (value: string) => {
         setName(value);
