@@ -1,12 +1,15 @@
 import { useRouter } from 'next/dist/client/router';
 import React, { useEffect, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 import 'twin.macro';
 import Input from '../components/Input';
 import Layout from '../components/Layout';
+import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 export default function Home() {
     const [message, setMessage] = useState('');
+    const [forceLoader, setForceLoader] = useState(false);
     const router = useRouter();
     const messagesContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -27,6 +30,20 @@ export default function Home() {
             });
         }
     });
+    useHotkeys('ctrl+l, cmd+l', (e) => {
+        e.preventDefault();
+        setForceLoader((x) => !x);
+    });
+
+    if (!router.query.room || forceLoader) {
+        return (
+            <div tw="h-screen w-screen flex">
+                <div tw="h-20 w-20 m-auto">
+                    <Loader />
+                </div>
+            </div>
+        );
+    }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
