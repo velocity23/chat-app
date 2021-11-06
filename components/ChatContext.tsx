@@ -40,7 +40,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <ChatContext.Provider value={{ name, setName: updateName, roomId: '' }}>
+        <ChatContext.Provider value={{ name, setName: updateName, roomId }}>
             {children}
         </ChatContext.Provider>
     );
