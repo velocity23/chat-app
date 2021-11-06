@@ -1,5 +1,4 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Dialog } from '@headlessui/react';
 import 'twin.macro';
 
 export default function HelpDialog({
@@ -36,23 +35,42 @@ export default function HelpDialog({
                         chat in class subtly and easily. Some key points;
                         <ul tw="list-disc space-y-1 ml-5 mt-2">
                             <li>
-                                You and everybody else can change their name at
-                                any time and previous messages will not be
-                                affected. Please make sure people are who they
-                                say they are!
+                                <span tw="font-semibold">
+                                    You and everybody else can change their name
+                                    at any time and previous messages will not
+                                    be affected.
+                                </span>{' '}
+                                Please make sure people are who they say they
+                                are &#129323;
                             </li>
                             <li>
-                                You cannot delete or update messages. Choose
-                                your words wisely!
+                                <span tw="font-semibold">
+                                    You cannot delete or update messages.
+                                </span>{' '}
+                                Choose your words wisely &#129300;
                             </li>
                             <li>
-                                Teacher on their way round? Do{' '}
+                                <span tw="font-semibold">
+                                    Teacher on their way round?
+                                </span>{' '}
+                                Do{' '}
                                 <kbd tw="bg-gray-200 border border-gray-400 shadow rounded p-0.5 text-sm">
                                     Ctrl/Cmd + L
                                 </kbd>{' '}
                                 to show a discreet loading screen, and then the
                                 same combination again to get back to chatting
-                                once they're out of sight &#128521;.
+                                once they're out of sight &#128521;
+                            </li>
+                            <li>
+                                <span tw="font-semibold">
+                                    Chat getting too full?
+                                </span>{' '}
+                                Type{' '}
+                                <code tw="bg-gray-700 border border-gray-900 shadow rounded p-0.5 text-sm text-white">
+                                    /clear
+                                </code>{' '}
+                                in the chat bar and hit enter to clear the chat
+                                for you and you only &#128525;
                             </li>
                         </ul>
                     </Dialog.Description>
