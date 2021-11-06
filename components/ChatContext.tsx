@@ -3,19 +3,22 @@ import React, { createContext, useState } from 'react';
 
 export const ChatContext = createContext<{
     name: string;
-    roomId: string;
+    roomId: string | null;
     setName: (value: string) => void;
+    isReady: boolean;
 }>({
     name: `anon-${Math.floor(new Date().getTime() / 1000)}`,
-    roomId: '',
+    roomId: null,
     setName: () => {},
+    isReady: false,
 });
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
 
     const anonName = `anon-${Math.floor(new Date().getTime() / 1000)}`;
-    const roomId = (router.query.room as string | undefined) || 'Unknown';
+    const roomId = (router.query.room as string | undefined) || null;
+    const isReady = router.isReady;
     if (typeof localStorage === 'undefined') {
         return (
             <ChatContext.Provider
@@ -23,6 +26,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                     name: anonName,
                     roomId,
                     setName: (_value: string) => {},
+                    isReady,
                 }}
             >
                 {children}
@@ -40,7 +44,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <ChatContext.Provider value={{ name, setName: updateName, roomId }}>
+        <ChatContext.Provider
+            value={{ name, setName: updateName, roomId, isReady }}
+        >
             {children}
         </ChatContext.Provider>
     );

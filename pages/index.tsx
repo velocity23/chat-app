@@ -6,30 +6,34 @@ import Input from '../components/Input';
 import Layout from '../components/Layout';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import useMessages from '../hooks/messages';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Home() {
-    const [message, setMessage] = useState('');
+    const [input, setInput] = useState('');
     const [forceLoader, setForceLoader] = useState(false);
     const router = useRouter();
     const messagesContainerRef = React.useRef<HTMLDivElement>(null);
+    const { messages, postMessage } = useMessages();
 
     useEffect(() => {
         messagesContainerRef.current?.scrollTo(
             0,
             messagesContainerRef.current?.scrollHeight
         );
-    });
+    }, [messages]);
     useEffect(() => {
+        if (!router.isReady) return;
         const room = router.query.room as string | undefined;
         if (!room) {
             router.push({
                 pathname: '/',
                 query: {
-                    room: '00000000-0000-0000-0000-000000000000',
+                    room: uuidv4(),
                 },
             });
         }
-    });
+    }, [router.query.room, router.isReady]);
     useHotkeys('ctrl+l, cmd+l', (e) => {
         e.preventDefault();
         setForceLoader((x) => !x);
@@ -47,8 +51,8 @@ export default function Home() {
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
-            // Send Message
-            setMessage('');
+            postMessage(input);
+            setInput('');
         }
     }
 
@@ -56,22 +60,15 @@ export default function Home() {
         <Layout>
             <div tw="flex flex-col h-full gap-3">
                 <div tw="flex-1 overflow-y-auto" ref={messagesContainerRef}>
-                    {Array.from({ length: 25 }).map(() => (
-                        <Message
-                            message={{
-                                content: 'Hello World',
-                                created_at: new Date().toISOString(),
-                                room_id: 'hello',
-                                user_name: 'Kai',
-                                id: 'x',
-                            }}
-                        />
+                    {messages.map((m) => (
+                        <Message message={m} key={m.id} />
                     ))}
                 </div>
                 <Input
                     type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                 />
             </div>

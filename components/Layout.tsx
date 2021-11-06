@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import 'twin.macro';
 import {
+    ClipboardCopyIcon,
     InformationCircleIcon,
-    LoginIcon,
     UserIcon,
-} from '@heroicons/react/solid';
+} from '@heroicons/react/outline';
 import { ChatContext } from './ChatContext';
 import HelpDialog from './HelpDialog';
 import tw from 'twin.macro';
@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <InformationCircleIcon tw="h-5 w-5 m-2" />
                 </MenuItem>
                 <MenuItem onClick={copyRoomLink}>
-                    <LoginIcon tw="h-5 w-5 m-2" />
+                    <ClipboardCopyIcon tw="h-5 w-5 m-2" />
                 </MenuItem>
             </div>
             <HelpDialog setIsOpen={setShowHelp} isOpen={showHelp} />
