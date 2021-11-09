@@ -72,6 +72,14 @@ export default function HelpDialog({
                                 in the chat bar and hit enter to clear the chat
                                 for you and you only &#128525;
                             </li>
+                            <li>
+                                <span tw="font-semibold">
+                                    You can enable sound to hear a nice little{' '}
+                                    <i>pop</i> when a new message comes through.
+                                </span>{' '}
+                                For your safety, this is disabled by default and
+                                does not persist between page loads &#128264;
+                            </li>
                         </ul>
                     </Dialog.Description>
                 </div>
