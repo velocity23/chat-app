@@ -22,7 +22,7 @@ export default function Home() {
             0,
             messagesContainerRef.current?.scrollHeight
         );
-    }, [messages]);
+    }, [messages, forceLoader]);
     useEffect(() => {
         if (!router.isReady) return;
         const room = router.query.room as string | undefined;
