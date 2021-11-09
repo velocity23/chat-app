@@ -4,6 +4,8 @@ import {
     ClipboardCopyIcon,
     InformationCircleIcon,
     UserIcon,
+    VolumeOffIcon,
+    VolumeUpIcon,
 } from '@heroicons/react/outline';
 import { ChatContext } from './ChatContext';
 import HelpDialog from './HelpDialog';
@@ -12,7 +14,8 @@ import tw from 'twin.macro';
 const MenuItem = tw.div`bg-gray-700 text-white rounded-full cursor-pointer hover:shadow-lg`;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const { name, setName, roomId } = useContext(ChatContext);
+    const { name, setName, setEnableSound, enableSound } =
+        useContext(ChatContext);
     const [showHelp, setShowHelp] = useState(false);
 
     function changeUsername() {
@@ -45,6 +48,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </MenuItem>
                 <MenuItem onClick={copyRoomLink}>
                     <ClipboardCopyIcon tw="h-5 w-5 m-2" />
+                </MenuItem>
+                <MenuItem onClick={() => setEnableSound((x) => !x)}>
+                    {enableSound ? (
+                        <VolumeUpIcon tw="h-5 w-5 m-2" />
+                    ) : (
+                        <VolumeOffIcon tw="h-5 w-5 m-2" />
+                    )}
                 </MenuItem>
             </div>
             <HelpDialog setIsOpen={setShowHelp} isOpen={showHelp} />

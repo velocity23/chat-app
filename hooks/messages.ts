@@ -15,38 +15,14 @@ import {
 import { ChatContext } from '../components/ChatContext';
 import { SupabaseContext } from '../components/SupabaseContext';
 import { v4 as uuidv4 } from 'uuid';
+import useSound from 'use-sound';
 
 export default function useMessages() {
     const [messages, setMessages] = useState<Message[]>([]);
     const chatContext = useContext(ChatContext);
     const supabaseClient = useContext(SupabaseContext)!;
     const subscription = useRef<RealtimeSubscription | null>(null);
-
-    useEffect(() => {
-        (async () => {
-            if (!chatContext.roomId) return;
-            const messages = await supabaseClient
-                .from<Message>('messages')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .eq('room_id', chatContext.roomId);
-            if (messages.error) {
-                throw messages.error;
-            }
-
-            setMessages(messages.data.reverse());
-        })();
-    }, [chatContext.roomId]);
-    useEffect(() => {
-        subscription.current = supabaseClient
-            .from<Message>(`messages:room_id=eq.${chatContext.roomId}`)
-            .on('INSERT', handleNewMessage)
-            .subscribe();
-
-        return () => {
-            subscription.current?.unsubscribe();
-        };
-    }, [chatContext.roomId]);
+    const [playNotification] = useSound('/notification.mp3');
 
     const postMessage = useCallback(
         async (content: string) => {
@@ -75,21 +51,53 @@ export default function useMessages() {
                 throw res.error;
             }
         },
-        [messages, chatContext.name, chatContext.roomId]
+        [messages, chatContext.name, chatContext.roomId, supabaseClient]
     );
     const handleNewMessage = useCallback(
         async (payload: SupabaseRealtimePayload<Message>) => {
             if (payload.eventType != 'INSERT') return;
-            console.log('Is INSERT');
             if (payload.new.room_id != chatContext.roomId) return;
-            console.log('Is INSERT for this room');
             if (messages.some((m) => m.id == payload.new.id)) return;
-            console.log(messages);
 
             setMessages((m) => [...m, payload.new]);
+
+            console.log(1);
+            if (
+                payload.new.user_name !== chatContext.name &&
+                chatContext.enableSound
+            ) {
+                console.log('Playing sound');
+                playNotification();
+            }
         },
-        [messages, chatContext.roomId]
+        [messages, chatContext, playNotification]
     );
+
+    useEffect(() => {
+        (async () => {
+            if (!chatContext.roomId) return;
+            const messages = await supabaseClient
+                .from<Message>('messages')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .eq('room_id', chatContext.roomId);
+            if (messages.error) {
+                throw messages.error;
+            }
+
+            setMessages(messages.data.reverse());
+        })();
+    }, [chatContext.roomId, supabaseClient]);
+    useEffect(() => {
+        subscription.current = supabaseClient
+            .from<Message>(`messages:room_id=eq.${chatContext.roomId}`)
+            .on('INSERT', handleNewMessage)
+            .subscribe();
+
+        return () => {
+            subscription.current?.unsubscribe();
+        };
+    }, [chatContext.roomId, supabaseClient, handleNewMessage]);
 
     return {
         messages,
