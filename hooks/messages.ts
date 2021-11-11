@@ -16,6 +16,7 @@ import { ChatContext } from '../components/ChatContext';
 import { SupabaseContext } from '../components/SupabaseContext';
 import { v4 as uuidv4 } from 'uuid';
 import useSound from 'use-sound';
+import useFocus from './focus';
 
 export default function useMessages() {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -23,6 +24,8 @@ export default function useMessages() {
     const supabaseClient = useContext(SupabaseContext)!;
     const subscription = useRef<RealtimeSubscription | null>(null);
     const [playNotification] = useSound('/notification.mp3');
+    const isFocused = useFocus();
+    const [showNotification, setShowNotification] = useState(false);
 
     const postMessage = useCallback(
         async (content: string) => {
@@ -61,7 +64,6 @@ export default function useMessages() {
 
             setMessages((m) => [...m, payload.new]);
 
-            console.log(1);
             if (
                 payload.new.user_name !== chatContext.name &&
                 chatContext.enableSound
@@ -69,8 +71,12 @@ export default function useMessages() {
                 console.log('Playing sound');
                 playNotification();
             }
+
+            if (!isFocused) {
+                setShowNotification(true);
+            }
         },
-        [messages, chatContext, playNotification]
+        [messages, chatContext, playNotification, isFocused]
     );
 
     useEffect(() => {
@@ -98,10 +104,14 @@ export default function useMessages() {
             subscription.current?.unsubscribe();
         };
     }, [chatContext.roomId, supabaseClient, handleNewMessage]);
+    useEffect(() => {
+        if (isFocused && showNotification) setShowNotification(false);
+    }, [isFocused, showNotification]);
 
     return {
         messages,
         postMessage,
+        showNotification,
     };
 }
 

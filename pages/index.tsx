@@ -15,7 +15,7 @@ export default function Home() {
     const [forceLoader, setForceLoader] = useState(false);
     const router = useRouter();
     const messagesContainerRef = React.useRef<HTMLDivElement>(null);
-    const { messages, postMessage } = useMessages();
+    const { messages, postMessage, showNotification } = useMessages();
 
     useEffect(() => {
         messagesContainerRef.current?.scrollTo(
@@ -58,7 +58,7 @@ export default function Home() {
     }
 
     return (
-        <Layout>
+        <Layout showNotification={showNotification}>
             <div tw="flex flex-col h-full gap-3">
                 <div tw="flex-1 overflow-y-auto" ref={messagesContainerRef}>
                     {messages.map((m) => (

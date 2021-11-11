@@ -10,10 +10,17 @@ import {
 import { ChatContext } from './ChatContext';
 import HelpDialog from './HelpDialog';
 import tw from 'twin.macro';
+import Head from 'next/head';
 
 const MenuItem = tw.div`bg-gray-700 text-white rounded-full cursor-pointer hover:shadow-lg`;
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({
+    showNotification,
+    children,
+}: {
+    showNotification?: boolean;
+    children: React.ReactNode;
+}) {
     const { name, setName, setEnableSound, enableSound } =
         useContext(ChatContext);
     const [showHelp, setShowHelp] = useState(false);
@@ -36,6 +43,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     return (
         <div tw="min-h-screen w-full bg-gray-200 flex">
+            <Head>
+                <title>Subtle Chat App{showNotification ? ' (!)' : ''}</title>
+            </Head>
             <div tw="bg-gray-700 h-[calc(100vh - 100px)] m-auto md:w-[calc(100vw - 200px)] w-[calc(100vw - 50px)] text-white p-5">
                 {children}
             </div>
